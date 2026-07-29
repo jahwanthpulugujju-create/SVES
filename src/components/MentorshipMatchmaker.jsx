@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from 'react';
-import { Rocket, Target, ShieldCheck, ExternalLink, Sparkles, UserCheck } from 'lucide-react';
+import { Rocket, Target, ShieldCheck, ExternalLink, Sparkles, UserCheck, Cpu, Sliders } from 'lucide-react';
 
 export default function MentorshipMatchmaker({ data, onSelectProfile }) {
   const [targetTech, setTargetTech] = useState('AI / Machine Learning');
@@ -31,28 +31,32 @@ export default function MentorshipMatchmaker({ data, onSelectProfile }) {
 
   return (
     <div className="space-y-6 animate-fade-in pb-12">
-      {/* Header Banner */}
-      <div className="glass-panel p-6 border-emerald-500/30">
-        <div className="flex items-center gap-3 mb-2">
-          <div className="p-2 bg-emerald-500/20 text-emerald-400 rounded-lg">
-            <Target className="w-5 h-5" />
+      {/* Braun Hardware Patching Panel Header */}
+      <div className="braun-panel-dark p-6">
+        <div className="flex items-center justify-between border-b border-[#2d3038] pb-3 mb-3">
+          <div className="flex items-center gap-3">
+            <Target className="w-5 h-5 text-[#00b359]" />
+            <h2 className="font-mono text-sm font-bold text-white tracking-widest uppercase">
+              MODUL 04: INNOVATION OFFICE MENTORSHIP PATCH PANEL
+            </h2>
           </div>
-          <h2 className="text-xl font-bold text-white">Innovation Office Mentorship Matchmaker</h2>
+          <span className="font-mono text-xs text-[#00e676] font-bold">[PATCH MATRIX ACTIVE]</span>
         </div>
-        <p className="text-xs text-gray-300">
-          Match target technology verticals and startup incubation domains with verified High-Potential Alumni mentors for advisory boards, incubation programs, and student mentoring.
+
+        <p className="font-mono text-xs text-gray-300">
+          Connect target domain signals with verified High-Potential Alumni mentors for advisory boards, startup incubation, and specialized research guidance.
         </p>
 
-        {/* Domain Selector */}
-        <div className="flex overflow-x-auto gap-2 mt-5 pt-2 border-t border-gray-800 no-scrollbar">
+        {/* Modular Domain Selector Matrix */}
+        <div className="flex overflow-x-auto gap-2 mt-5 pt-3 border-t border-[#2d3038] no-scrollbar font-mono text-xs">
           {techDomains.map((domain) => (
             <button
               key={domain}
               onClick={() => setTargetTech(domain)}
-              className={`px-3.5 py-2 rounded-lg text-xs font-bold whitespace-nowrap transition-all ${
+              className={`px-3.5 py-2 rounded-md font-bold whitespace-nowrap transition-all border ${
                 targetTech === domain
-                  ? 'bg-emerald-600 text-white shadow-lg shadow-emerald-500/20'
-                  : 'bg-gray-900/60 border border-gray-800 text-gray-400 hover:text-white'
+                  ? 'bg-[#00b359] text-white border-[#00e676] shadow-lg shadow-[#00b359]/30'
+                  : 'bg-[#141619] text-gray-400 border-[#2e3238] hover:text-white'
               }`}
             >
               {domain}
@@ -61,46 +65,46 @@ export default function MentorshipMatchmaker({ data, onSelectProfile }) {
         </div>
       </div>
 
-      {/* Results Header */}
-      <div className="flex items-center justify-between glass-card px-5 py-3">
-        <div className="text-xs font-semibold text-gray-300 flex items-center gap-2">
-          <UserCheck className="w-4 h-4 text-emerald-400" />
-          Found <strong className="text-emerald-400">{matchedAlumni.length}</strong> High Mentorship Ready Alumni in <span className="text-white">{targetTech}</span>
+      {/* Results Signal Telemetry Bar */}
+      <div className="flex items-center justify-between bg-[#1e2025] border border-[#2d3038] px-5 py-3 rounded-lg font-mono text-xs">
+        <div className="text-gray-300 flex items-center gap-2">
+          <UserCheck className="w-4 h-4 text-[#00e676]" />
+          SIGNAL VERIFIED: Found <strong className="text-[#00e676]">{matchedAlumni.length}</strong> High Mentor Modules in <span className="text-white">{targetTech}</span>
         </div>
       </div>
 
-      {/* Cards Grid */}
+      {/* Hardware Module Cards Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {matchedAlumni.map((item) => (
           <div
             key={item.id}
             onClick={() => onSelectProfile(item)}
-            className="glass-card p-5 cursor-pointer flex flex-col justify-between hover:border-emerald-500/50"
+            className="braun-panel p-5 cursor-pointer flex flex-col justify-between hover:border-[#00b359] transition-all"
           >
             <div>
               <div className="flex items-center justify-between mb-2">
-                <span className="badge badge-high">High Mentorship Ready</span>
-                <span className="text-[11px] text-gray-500">{item.location}</span>
+                <span className="badge-braun badge-high-val">HIGH MENTOR VALUE</span>
+                <span className="font-mono text-[11px] text-gray-600 font-bold">{item.location}</span>
               </div>
 
-              <h4 className="font-bold text-white text-base">{item.name}</h4>
-              <div className="text-xs font-semibold text-emerald-400 mt-0.5">{item.current_role}</div>
-              <div className="text-xs text-gray-300 font-medium mt-1">{item.organization}</div>
+              <h4 className="font-bold text-[#1f2228] text-base">{item.name}</h4>
+              <div className="font-mono text-xs font-bold text-[#00b359] mt-0.5">{item.current_role}</div>
+              <div className="text-xs text-gray-700 font-semibold mt-1">{item.organization}</div>
 
               {item.education && item.education[0] && (
-                <div className="text-[11px] text-gray-400 mt-2">
+                <div className="font-mono text-[11px] text-gray-600 mt-2">
                   🎓 {item.education[0].institution} ({item.education[0].degree})
                 </div>
               )}
             </div>
 
-            <div className="mt-4 pt-3 border-t border-gray-800 flex items-center justify-between" onClick={(e) => e.stopPropagation()}>
-              <span className="text-[11px] text-gray-400">{item.seniority_notes}</span>
+            <div className="mt-4 pt-3 border-t border-[#bcbbb5] flex items-center justify-between" onClick={(e) => e.stopPropagation()}>
+              <span className="font-mono text-[11px] text-gray-600 font-bold">{item.seniority_notes}</span>
               <a
                 href={item.linkedin_url}
                 target="_blank"
                 rel="noreferrer"
-                className="text-xs text-blue-400 hover:text-blue-300 font-semibold inline-flex items-center gap-1"
+                className="braun-btn braun-btn-green text-xs"
               >
                 LinkedIn <ExternalLink className="w-3 h-3" />
               </a>
