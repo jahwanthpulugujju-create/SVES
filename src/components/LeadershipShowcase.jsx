@@ -1,127 +1,215 @@
 import React, { useState, useMemo } from 'react';
-import { Rocket, Award, BookOpen, ExternalLink, Building2, ChevronRight, Cpu, Globe, Star } from 'lucide-react';
+import { Rocket, Award, BookOpen, Cpu, Star, ExternalLink } from 'lucide-react';
 
-export default function LeadershipShowcase({ data, onSelectProfile }) {
-  const [activeSubtab, setActiveSubtab] = useState('founders');
+const S = {
+  label: { fontFamily: 'var(--font-mono)', fontSize: 9, fontWeight: 600, letterSpacing: '0.12em', textTransform: 'uppercase', color: '#888882' },
+  panel: (extra = {}) => ({ background: '#F0F0EB', border: '1px solid #C8C7C1', borderRadius: 12, boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.85), 0 2px 8px rgba(0,0,0,0.10)', ...extra }),
+  panelDark: (extra = {}) => ({ background: '#28292D', border: '1px solid #3E4047', borderRadius: 12, boxShadow: '0 4px 16px rgba(0,0,0,0.35)', ...extra }),
+};
 
-  const founders = useMemo(() => data.filter((d) => d.categories.includes('Founders / Co-founders')), [data]);
-  const csuite = useMemo(() => data.filter((d) => d.categories.includes('C-suite or Senior Leadership')), [data]);
-  const academics = useMemo(() => data.filter((d) => d.categories.includes('PhD / Academic / Research-oriented')), [data]);
-  const frontierTech = useMemo(() => data.filter((d) => d.categories.includes('Specific / Emerging / Future Technologies')), [data]);
-  const highValueMentors = useMemo(() => data.filter((d) => d.mentorship_potential === 'High'), [data]);
+const SUB_TABS = [
+  { id: 'founders',  label: 'Founders',   icon: Rocket,     accent: '#FF5500', cat: 'Founders / Co-founders' },
+  { id: 'csuite',    label: 'C-Suite',    icon: Award,      accent: '#2979FF', cat: 'C-suite or Senior Leadership' },
+  { id: 'academic',  label: 'PhD / Acad', icon: BookOpen,   accent: '#7C4DFF', cat: 'PhD / Academic / Research-oriented' },
+  { id: 'tech',      label: 'Frontier Tech', icon: Cpu,     accent: '#00C853', cat: 'Specific / Emerging / Future Technologies' },
+  { id: 'highval',   label: 'High-Value', icon: Star,       accent: '#FFB300', cat: '__HIGH__' },
+];
 
-  const currentList = activeSubtab === 'founders' ? founders : (activeSubtab === 'csuite' ? csuite : (activeSubtab === 'academics' ? academics : (activeSubtab === 'highval' ? highValueMentors : frontierTech)));
+function AlumniCard({ alumnus, accent, onSelect }) {
+  const [hovered, setHovered] = useState(false);
 
   return (
-    <div className="space-y-6 animate-fade-in pb-12">
-      {/* Braun Subtab Deck Navigation */}
-      <div className="flex overflow-x-auto gap-2 bg-[#1c1e22] border border-[#2e3238] p-2.5 rounded-lg no-scrollbar font-mono text-xs">
-        <button
-          onClick={() => setActiveSubtab('founders')}
-          className={`flex items-center gap-2 px-4 py-2.5 rounded-md font-bold transition-all border ${
-            activeSubtab === 'founders'
-              ? 'bg-[#ff4d00] text-white border-[#ff661a]'
-              : 'bg-[#141619] text-gray-400 border-[#2e3238] hover:text-white'
-          }`}
-        >
-          <Rocket className="w-3.5 h-3.5 text-[#ffaa00]" />
-          FOUNDERS & CO-FOUNDERS ({founders.length})
-        </button>
-
-        <button
-          onClick={() => setActiveSubtab('csuite')}
-          className={`flex items-center gap-2 px-4 py-2.5 rounded-md font-bold transition-all border ${
-            activeSubtab === 'csuite'
-              ? 'bg-[#ff4d00] text-white border-[#ff661a]'
-              : 'bg-[#141619] text-gray-400 border-[#2e3238] hover:text-white'
-          }`}
-        >
-          <Award className="w-3.5 h-3.5 text-[#60a5fa]" />
-          C-SUITE EXECUTIVES & VPS ({csuite.length})
-        </button>
-
-        <button
-          onClick={() => setActiveSubtab('academics')}
-          className={`flex items-center gap-2 px-4 py-2.5 rounded-md font-bold transition-all border ${
-            activeSubtab === 'academics'
-              ? 'bg-[#ff4d00] text-white border-[#ff661a]'
-              : 'bg-[#141619] text-gray-400 border-[#2e3238] hover:text-white'
-          }`}
-        >
-          <BookOpen className="w-3.5 h-3.5 text-[#c084fc]" />
-          PHD & ACADEMIC RESEARCHERS ({academics.length})
-        </button>
-
-        <button
-          onClick={() => setActiveSubtab('highval')}
-          className={`flex items-center gap-2 px-4 py-2.5 rounded-md font-bold transition-all border ${
-            activeSubtab === 'highval'
-              ? 'bg-[#ff4d00] text-white border-[#ff661a]'
-              : 'bg-[#141619] text-gray-400 border-[#2e3238] hover:text-white'
-          }`}
-        >
-          <Star className="w-3.5 h-3.5 text-[#00e676]" />
-          HIGH VALUE MENTORS ({highValueMentors.length})
-        </button>
-
-        <button
-          onClick={() => setActiveSubtab('tech')}
-          className={`flex items-center gap-2 px-4 py-2.5 rounded-md font-bold transition-all border ${
-            activeSubtab === 'tech'
-              ? 'bg-[#ff4d00] text-white border-[#ff661a]'
-              : 'bg-[#141619] text-gray-400 border-[#2e3238] hover:text-white'
-          }`}
-        >
-          <Cpu className="w-3.5 h-3.5 text-[#fbbf24]" />
-          FRONTIER TECH PIONEERS ({frontierTech.length})
-        </button>
-      </div>
-
-      {/* Industrial Hardware Module Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        {currentList.map((item) => (
-          <div
-            key={item.id}
-            onClick={() => onSelectProfile(item)}
-            className="braun-panel p-5 cursor-pointer flex flex-col justify-between hover:border-[#ff4d00] transition-all"
-          >
-            <div>
-              <div className="flex items-center justify-between gap-2 mb-2">
-                <span className="badge-braun badge-high-val">{item.mentorship_potential} MENTOR VALUE</span>
-                <span className="font-mono text-[11px] text-gray-600 font-bold">{item.location}</span>
-              </div>
-
-              <h4 className="font-bold text-[#1f2228] text-base">{item.name}</h4>
-              <div className="font-mono text-xs font-bold text-[#ff4d00] mt-0.5">{item.current_role}</div>
-              <div className="text-xs text-gray-700 font-semibold mt-1">{item.organization}</div>
-
-              {item.tech_focus && item.tech_focus.length > 0 && (
-                <div className="flex flex-wrap gap-1 mt-3">
-                  {item.tech_focus.map((t, idx) => (
-                    <span key={idx} className="badge-braun badge-tech-val">{t}</span>
-                  ))}
-                </div>
-              )}
-
-              {item.achievements && item.achievements.length > 0 && (
-                <div className="mt-3 pt-3 border-t border-[#bcbbb5] font-mono text-xs text-gray-700">
-                  ⚡ {item.achievements[0]}
-                </div>
-              )}
-            </div>
-
-            <div className="mt-4 pt-3 border-t border-[#bcbbb5] flex items-center justify-between" onClick={(e) => e.stopPropagation()}>
-              <span className="font-mono text-[11px] text-gray-600 font-bold">{item.seniority_notes}</span>
-              <a
-                href={item.linkedin_url}
-                target="_blank"
-                rel="noreferrer"
-                className="braun-btn braun-btn-orange text-xs"
-              >
-                LinkedIn <ExternalLink className="w-3 h-3" />
-              </a>
+    <div
+      onClick={() => onSelect(alumnus)}
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
+      style={{
+        ...S.panel({
+          padding: 18,
+          cursor: 'pointer',
+          borderColor: hovered ? accent : '#C8C7C1',
+          boxShadow: hovered
+            ? `inset 0 1px 0 rgba(255,255,255,0.85), 0 6px 20px rgba(0,0,0,0.15), 0 0 0 1px ${accent}40`
+            : 'inset 0 1px 0 rgba(255,255,255,0.85), 0 2px 8px rgba(0,0,0,0.10)',
+          transition: 'all 0.2s ease',
+          display: 'flex', flexDirection: 'column', gap: 12,
+        }),
+      }}
+    >
+      {/* Top row */}
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+          {/* Avatar knob */}
+          <div style={{
+            width: 36, height: 36, borderRadius: '50%',
+            background: `radial-gradient(circle at 35% 30%, ${accent}88 0%, ${accent}22 60%, #E0E0DA 100%)`,
+            border: `2px solid ${accent}55`,
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+            fontFamily: 'var(--font-mono)', fontWeight: 700, fontSize: 14, color: '#1A1C1E',
+          }}>
+            {alumnus.name?.[0] || '?'}
+          </div>
+          <div>
+            <div style={{ fontWeight: 700, fontSize: 13, color: '#1A1C1E', lineHeight: 1.2 }}>{alumnus.name}</div>
+            <div style={{ fontFamily: 'var(--font-mono)', fontSize: 10, color: accent, marginTop: 2 }}>
+              {alumnus.current_role}
             </div>
           </div>
+        </div>
+
+        <div style={{ display: 'flex', align: 'center' }}>
+          <div style={{
+            width: 8, height: 8, borderRadius: '50%',
+            background: alumnus.mentorship_potential === 'High' ? '#00C853' : '#FFB300',
+            boxShadow: `0 0 5px ${alumnus.mentorship_potential === 'High' ? '#00C853' : '#FFB300'}`,
+          }} />
+        </div>
+      </div>
+
+      {/* Org + Location */}
+      <div>
+        <div style={{ fontWeight: 600, fontSize: 12, color: '#555552' }}>{alumnus.organization}</div>
+        <div style={{ fontFamily: 'var(--font-mono)', fontSize: 10, color: '#AAAAA4', marginTop: 2 }}>
+          {alumnus.location}
+        </div>
+      </div>
+
+      {/* Tech tags */}
+      {alumnus.tech_focus?.length > 0 && (
+        <div style={{ display: 'flex', flexWrap: 'wrap', gap: 4 }}>
+          {alumnus.tech_focus.slice(0, 2).map((t, i) => (
+            <span key={i} style={{
+              fontFamily: 'var(--font-mono)',
+              fontSize: 9,
+              padding: '2px 7px',
+              background: `${accent}15`,
+              color: accent,
+              border: `1px solid ${accent}35`,
+              borderRadius: 3,
+            }}>
+              {t}
+            </span>
+          ))}
+        </div>
+      )}
+
+      {/* Bottom row */}
+      <div style={{
+        display: 'flex', justifyContent: 'space-between', alignItems: 'center',
+        paddingTop: 10, borderTop: '1px solid rgba(0,0,0,0.07)',
+      }}>
+        <span style={{ ...S.label, color: '#AAAAA4', fontSize: 8 }}>{alumnus.seniority_notes}</span>
+        <a
+          href={alumnus.linkedin_url}
+          target="_blank"
+          rel="noreferrer"
+          onClick={e => e.stopPropagation()}
+          style={{
+            fontFamily: 'var(--font-mono)',
+            fontSize: 9, fontWeight: 600, padding: '4px 10px',
+            background: accent, color: '#fff',
+            border: 'none', borderRadius: 3,
+            cursor: 'pointer', textDecoration: 'none',
+            display: 'flex', alignItems: 'center', gap: 4,
+            boxShadow: `0 0 8px ${accent}44`,
+          }}
+        >
+          LinkedIn <ExternalLink size={9} />
+        </a>
+      </div>
+    </div>
+  );
+}
+
+export default function LeadershipShowcase({ data, onSelectProfile }) {
+  const [activeSubTab, setActiveSubTab] = useState('founders');
+
+  const currentSubTab = SUB_TABS.find(t => t.id === activeSubTab);
+
+  const list = useMemo(() => {
+    if (activeSubTab === 'highval') return data.filter(d => d.mentorship_potential === 'High');
+    return data.filter(d => d.categories?.includes(currentSubTab.cat));
+  }, [data, activeSubTab, currentSubTab]);
+
+  return (
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 16, padding: '24px 0 48px', animation: 'fadeUp 0.35s ease both' }}>
+
+      {/* ═══ TAB SELECTOR — Hardware selector buttons ═══ */}
+      <div style={{
+        ...S.panel({ padding: '14px 20px' }),
+        display: 'flex', gap: 6, overflowX: 'auto',
+      }} className="no-scrollbar">
+        {SUB_TABS.map(tab => {
+          const Icon = tab.icon;
+          const isActive = activeSubTab === tab.id;
+          const count = tab.id === 'highval'
+            ? data.filter(d => d.mentorship_potential === 'High').length
+            : data.filter(d => d.categories?.includes(tab.cat)).length;
+
+          return (
+            <button
+              key={tab.id}
+              onClick={() => setActiveSubTab(tab.id)}
+              style={{
+                fontFamily: 'var(--font-mono)',
+                fontSize: 9, fontWeight: 600,
+                letterSpacing: '0.1em', textTransform: 'uppercase',
+                padding: '8px 14px',
+                borderRadius: 5,
+                border: isActive ? `1px solid ${tab.accent}` : '1px solid #C8C7C1',
+                background: isActive ? tab.accent : 'rgba(0,0,0,0.04)',
+                color: isActive ? '#fff' : '#666860',
+                cursor: 'pointer',
+                whiteSpace: 'nowrap',
+                display: 'flex', alignItems: 'center', gap: 6,
+                boxShadow: isActive ? `0 0 10px ${tab.accent}44, inset 0 1px 0 rgba(255,255,255,0.2)` : 'none',
+                transition: 'all 0.15s ease',
+              }}
+            >
+              <Icon size={11} />
+              {tab.label}
+              <span style={{
+                background: isActive ? 'rgba(255,255,255,0.25)' : 'rgba(0,0,0,0.1)',
+                padding: '1px 6px', borderRadius: 10,
+                fontSize: 8,
+              }}>
+                {count}
+              </span>
+            </button>
+          );
+        })}
+      </div>
+
+      {/* ═══ RESULT HEADER BAR ═══ */}
+      <div style={{
+        ...S.panelDark({ padding: '12px 20px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }),
+      }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+          <div className="b-led" style={{ background: currentSubTab.accent, boxShadow: `0 0 6px ${currentSubTab.accent}` }} />
+          <span style={{ fontFamily: 'var(--font-mono)', fontSize: 10, letterSpacing: '0.12em', color: '#888882', textTransform: 'uppercase' }}>
+            {currentSubTab.label} // {list.length} modules loaded
+          </span>
+        </div>
+        {/* Mini VU meter */}
+        <div className="b-vu" style={{ height: 20, gap: 2 }}>
+          {[60, 40, 80, 100, 70].map((h, i) => (
+            <div key={i} style={{
+              width: 4, height: `${h}%`, borderRadius: 1,
+              background: currentSubTab.accent, opacity: 0.7,
+            }} />
+          ))}
+        </div>
+      </div>
+
+      {/* ═══ CARDS GRID ═══ */}
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: 12 }}>
+        {list.map(alumnus => (
+          <AlumniCard
+            key={alumnus.id}
+            alumnus={alumnus}
+            accent={currentSubTab.accent}
+            onSelect={onSelectProfile}
+          />
         ))}
       </div>
     </div>
