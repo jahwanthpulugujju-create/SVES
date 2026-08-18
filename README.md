@@ -1,16 +1,40 @@
-# React + Vite
+# SVES Alumni Dashboard
 
-This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
+A web dashboard for exploring alumni information through searchable records, visual summaries, and operational views.
 
-Currently, two official plugins are available:
+## What it demonstrates
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+SVES is a React application that combines structured alumni data with dashboard components, charts, and responsive interface patterns. It is a suitable example of a data-focused front end with a clear separation between source data, application state, and presentation.
 
-## React Compiler
+## Architecture
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+```mermaid
+flowchart LR
+  Data[Alumni data] --> App[React application]
+  App --> Filters[Search and filters]
+  App --> Metrics[Summary metrics]
+  App --> Charts[Chart views]
+  App --> Directory[Alumni directory]
+  Filters --> Directory
+  Filters --> Charts
+```
 
-## Expanding the Oxlint configuration
+The application loads structured alumni data, derives filtered views from user input, and presents those views through directory and chart components.
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and Oxlint's TypeScript related rules in your project.
+## Local development
+
+```bash
+npm ci
+npm run dev
+```
+
+Validate a change before opening a pull request:
+
+```bash
+npm run lint
+npm run build
+```
+
+## Project standards
+
+Contributor guidance documents review expectations, while GitHub Actions validates the build and lint checks for pushes and pull requests.
